@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0A5853A283A30A8DF78AB869 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EC72A4A3F8BAFCABB10A5C /* libPods.a */; };
+		52E193041C4230BD00774841 /* SOTPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E193031C4230BD00774841 /* SOTPage.m */; };
+		52E193071C4235FA00774841 /* pageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E193061C4235FA00774841 /* pageTest.m */; };
 		52E64E991C3A1BBD0055483C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E64E981C3A1BBD0055483C /* main.m */; };
 		52E64E9C1C3A1BBD0055483C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E64E9B1C3A1BBD0055483C /* AppDelegate.m */; };
 		52E64E9F1C3A1BBD0055483C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E64E9E1C3A1BBD0055483C /* ViewController.m */; };
@@ -16,6 +18,8 @@
 		52E64EA71C3A1BBD0055483C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52E64EA51C3A1BBD0055483C /* LaunchScreen.storyboard */; };
 		52E64EB21C3A1BBD0055483C /* SO_TrackerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E64EB11C3A1BBD0055483C /* SO_TrackerTests.m */; };
 		52E64EBD1C3A1BBD0055483C /* SO_TrackerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E64EBC1C3A1BBD0055483C /* SO_TrackerUITests.m */; };
+		52F97B311C3C79EE0093DF4C /* PageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F97B2F1C3C79EE0093DF4C /* PageCell.m */; };
+		52F97B321C3C79EE0093DF4C /* PageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52F97B301C3C79EE0093DF4C /* PageCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		52E193021C4230BD00774841 /* SOTPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOTPage.h; sourceTree = "<group>"; };
+		52E193031C4230BD00774841 /* SOTPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOTPage.m; sourceTree = "<group>"; };
+		52E193061C4235FA00774841 /* pageTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pageTest.m; sourceTree = "<group>"; };
 		52E64E941C3A1BBD0055483C /* SO Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SO Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E64E981C3A1BBD0055483C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		52E64E9A1C3A1BBD0055483C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -52,6 +59,9 @@
 		52E64EB81C3A1BBD0055483C /* SO TrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SO TrackerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E64EBC1C3A1BBD0055483C /* SO_TrackerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SO_TrackerUITests.m; sourceTree = "<group>"; };
 		52E64EBE1C3A1BBD0055483C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52F97B2E1C3C79EE0093DF4C /* PageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageCell.h; sourceTree = "<group>"; };
+		52F97B2F1C3C79EE0093DF4C /* PageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageCell.m; sourceTree = "<group>"; };
+		52F97B301C3C79EE0093DF4C /* PageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PageCell.xib; sourceTree = "<group>"; };
 		A304642079DF2AF2697377F5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D5EC72A4A3F8BAFCABB10A5C /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E700EE781BB476D95987C7B3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -83,6 +93,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		52E193051C4230C400774841 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				52E193021C4230BD00774841 /* SOTPage.h */,
+				52E193031C4230BD00774841 /* SOTPage.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		52E64E8B1C3A1BBD0055483C = {
 			isa = PBXGroup;
 			children = (
@@ -108,6 +127,7 @@
 		52E64E961C3A1BBD0055483C /* SO Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				52E193051C4230C400774841 /* Models */,
 				52E64E9A1C3A1BBD0055483C /* AppDelegate.h */,
 				52E64E9B1C3A1BBD0055483C /* AppDelegate.m */,
 				52E64E9D1C3A1BBD0055483C /* ViewController.h */,
@@ -117,6 +137,9 @@
 				52E64EA51C3A1BBD0055483C /* LaunchScreen.storyboard */,
 				52E64EA81C3A1BBD0055483C /* Info.plist */,
 				52E64E971C3A1BBD0055483C /* Supporting Files */,
+				52F97B2E1C3C79EE0093DF4C /* PageCell.h */,
+				52F97B2F1C3C79EE0093DF4C /* PageCell.m */,
+				52F97B301C3C79EE0093DF4C /* PageCell.xib */,
 			);
 			path = "SO Tracker";
 			sourceTree = "<group>";
@@ -134,6 +157,7 @@
 			children = (
 				52E64EB11C3A1BBD0055483C /* SO_TrackerTests.m */,
 				52E64EB31C3A1BBD0055483C /* Info.plist */,
+				52E193061C4235FA00774841 /* pageTest.m */,
 			);
 			path = "SO TrackerTests";
 			sourceTree = "<group>";
@@ -272,6 +296,7 @@
 			files = (
 				52E64EA71C3A1BBD0055483C /* LaunchScreen.storyboard in Resources */,
 				52E64EA41C3A1BBD0055483C /* Assets.xcassets in Resources */,
+				52F97B321C3C79EE0093DF4C /* PageCell.xib in Resources */,
 				52E64EA21C3A1BBD0055483C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,8 +370,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52E193041C4230BD00774841 /* SOTPage.m in Sources */,
 				52E64E9F1C3A1BBD0055483C /* ViewController.m in Sources */,
 				52E64E9C1C3A1BBD0055483C /* AppDelegate.m in Sources */,
+				52F97B311C3C79EE0093DF4C /* PageCell.m in Sources */,
 				52E64E991C3A1BBD0055483C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -355,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52E193071C4235FA00774841 /* pageTest.m in Sources */,
 				52E64EB21C3A1BBD0055483C /* SO_TrackerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

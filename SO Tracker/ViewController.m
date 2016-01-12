@@ -7,12 +7,14 @@
 //
 
 #import "ViewController.h"
+#import "PageCell.h"
+#import "SOTPage.h"
 #import <AFNetworking.h>
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) AFHTTPRequestOperationManager *afManager;
-@property (nonatomic, strong) NSArray *pages;
+@property (nonatomic, strong) NSMutableArray *pages;
 
 @end
 
@@ -21,11 +23,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
+    self.pages = [NSMutableArray array];
     
-    // Register cell class for tableView
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+    // Register Cell
+    UINib *pageCellNib = [UINib nibWithNibName:@"PageCell" bundle:nil];
+    [self.tableView registerNib:pageCellNib forCellReuseIdentifier:NSStringFromClass([PageCell class])];
     
-    // Fetch pages
     self.afManager = [AFHTTPRequestOperationManager manager];
     [self fetchPages];
 }
@@ -40,7 +44,14 @@
     [self.afManager GET:@"https://agile-plains-3571.herokuapp.com/sotracker/pages" parameters:@{@"login":@"psytronx"} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"JSON: %@", responseObject);
         if ([responseObject isKindOfClass:[NSArray class]]) {
-            self.pages = responseObject;
+            
+            // Parse JSON into SOTPage objects
+            NSArray *pages = responseObject;
+            [pages enumerateObjectsUsingBlock:^(NSDictionary* pageDict, NSUInteger i, BOOL* stop) {
+                SOTPage *page = [[SOTPage alloc] initWithDictionary:pageDict];
+                [self.pages addObject:page];
+            }];
+            
             [self.tableView reloadData];
         } else {
             NSLog(@"Error: responseObject should be an array. Houston, we have a problem.");
@@ -69,26 +80,37 @@
     
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.pages){
+        SOTPage *page = self.pages[indexPath.row];
+        CGFloat height = [PageCell getCellHeightForPage:page width:self.view.bounds.size.width];
+        return height;
+    } else {
+        return 100;
+    }
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     // Get a cell from the pool
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
-    }
+    PageCell *cell = (PageCell *)[tableView dequeueReusableCellWithIdentifier:@"PageCell" forIndexPath:indexPath];
     
     // Configure the cell
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if (self.pages){
-        NSInteger index = [indexPath row];
-        NSDictionary *result = self.pages[index];
-        NSString *title = result[@"title"];
-        [cell.textLabel setText:title];
+        cell.page = self.pages[indexPath.row];
     }
     
     return cell;
 }
 
 #pragma mark - UITableViewDelegate methods
+
+//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
