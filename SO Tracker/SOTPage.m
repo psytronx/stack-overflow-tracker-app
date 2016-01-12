@@ -20,6 +20,7 @@
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
         self.lastViewed = [dateFormatter dateFromString: pageDict[@"lastViewed"]];
         self.tags = pageDict[@"tags"];
+        self.path = pageDict[@"path"];
     }
     return self;
     

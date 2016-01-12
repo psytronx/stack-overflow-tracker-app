@@ -10,6 +10,7 @@
 #import "PageCell.h"
 #import "SOTPage.h"
 #import <AFNetworking.h>
+#import <SafariServices/SafariServices.h>
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -32,6 +33,14 @@
     
     self.afManager = [AFHTTPRequestOperationManager manager];
     [self fetchPages];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // Deselect previously selected row
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -114,14 +123,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    NSLog(@"Row pressed");
-    
-    //Convenience variables
-    NSInteger section = [indexPath section];
-    NSInteger row = [indexPath row];
-    
-    // ... Do something with section and row ...
+    if (self.pages){
+        NSInteger row = [indexPath row];
+        NSString *urlString = [NSString stringWithFormat:@"https://www.stackoverflow.com%@", ((SOTPage *)self.pages[row]).path];
+        NSLog(@"Path: %@", urlString);
+        SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:urlString]];
+        [self presentViewController:safariVC animated:YES completion:nil];
+    }
 }
 
 @end
