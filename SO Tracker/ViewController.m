@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) AFHTTPRequestOperationManager *afManager;
 @property (nonatomic, strong) NSMutableArray *pages;
+@property (nonatomic, strong) UISearchController *searchController;
 
 @end
 
@@ -27,12 +28,24 @@
 
     self.pages = [NSMutableArray array];
     
-    // Register Cell
+    [self configureSearchController];
+    
     UINib *pageCellNib = [UINib nibWithNibName:@"PageCell" bundle:nil];
     [self.tableView registerNib:pageCellNib forCellReuseIdentifier:NSStringFromClass([PageCell class])];
     
     self.afManager = [AFHTTPRequestOperationManager manager];
     [self fetchPages];
+}
+
+- (void)configureSearchController {
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.searchBar.placeholder = @"Search here ...";
+    [self.searchController.searchBar sizeToFit];
+    self.searchController.searchBar.delegate = self;
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    //    self.navigationItem.titleView = self.searchController.searchBar;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -117,10 +130,6 @@
 
 #pragma mark - UITableViewDelegate methods
 
-//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.pages){
@@ -130,6 +139,24 @@
         SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:urlString]];
         [self presentViewController:safariVC animated:YES completion:nil];
     }
+}
+
+#pragma mark - UISearchResult
+
+- (void) updateSearchResultsForSearchController: (UISearchController *)searchController {
+    //...
+}
+
+#pragma mark - UISearchBarDelegate methods
+
+- (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    NSLog(@"searchBarCancelButtonClicked: ");
+    
+}
+
+- (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    NSLog(@"searchBarSearchButtonClicked: ");
+    
 }
 
 @end

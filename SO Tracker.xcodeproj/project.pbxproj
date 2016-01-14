@@ -93,6 +93,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		52399CB81C47893400AA949B /* Custom Cells */ = {
+			isa = PBXGroup;
+			children = (
+				52F97B2E1C3C79EE0093DF4C /* PageCell.h */,
+				52F97B2F1C3C79EE0093DF4C /* PageCell.m */,
+				52F97B301C3C79EE0093DF4C /* PageCell.xib */,
+			);
+			name = "Custom Cells";
+			sourceTree = "<group>";
+		};
 		52E193051C4230C400774841 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +137,7 @@
 		52E64E961C3A1BBD0055483C /* SO Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				52399CB81C47893400AA949B /* Custom Cells */,
 				52E193051C4230C400774841 /* Models */,
 				52E64E9A1C3A1BBD0055483C /* AppDelegate.h */,
 				52E64E9B1C3A1BBD0055483C /* AppDelegate.m */,
@@ -137,9 +148,6 @@
 				52E64EA51C3A1BBD0055483C /* LaunchScreen.storyboard */,
 				52E64EA81C3A1BBD0055483C /* Info.plist */,
 				52E64E971C3A1BBD0055483C /* Supporting Files */,
-				52F97B2E1C3C79EE0093DF4C /* PageCell.h */,
-				52F97B2F1C3C79EE0093DF4C /* PageCell.m */,
-				52F97B301C3C79EE0093DF4C /* PageCell.xib */,
 			);
 			path = "SO Tracker";
 			sourceTree = "<group>";

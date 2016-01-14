@@ -35,7 +35,7 @@
                             <constraint firstAttribute="trailing" secondItem="Dno-4s-AGM" secondAttribute="trailing" id="g94-Rt-bPo"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="ME8-Jo-M9R"/>
+                    <navigationItem key="navigationItem" title="Stack Overflow Tracker" id="ME8-Jo-M9R"/>
                     <connections>
                         <outlet property="tableView" destination="Dno-4s-AGM" id="wee-FN-15f"/>
                     </connections>
