@@ -44,16 +44,27 @@ typedef void(^CompletionBlock)(NSArray* results);
 }
 
 - (void)configureSearchController {
+    
+    // Set background color of nav bar
+    UIColor *backgroundColor = [UIColor colorWithRed:51.0/255 green:76.0/255 blue:118.0/255 alpha:1];
+    UIView* ctrl = [[UIView alloc] initWithFrame:self.navigationController.navigationBar.bounds];
+    ctrl.backgroundColor = backgroundColor;
+    ctrl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.navigationController.navigationBar addSubview:ctrl];
+    
+    // Configure search controller and place search bar in nav bar
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchResultsUpdater = self;
     self.searchController.searchBar.placeholder = @"Search Stack Overflow browsing history ...";
-    [self.searchController.searchBar sizeToFit];
     self.searchController.searchBar.delegate = self;
-    self.navigationItem.titleView = self.searchController.searchBar;
     self.searchController.hidesNavigationBarDuringPresentation = false;
     self.searchController.searchBar.enablesReturnKeyAutomatically = NO;
-    
+    self.searchController.searchBar.backgroundColor = backgroundColor;
+    self.navigationItem.titleView = self.searchController.searchBar;
+    [self.searchController.searchBar sizeToFit];
+
+    // Make sure Search button on keyboard remains enabled even if text is blank
     UITextField *textField = [self.searchController.searchBar valueForKey:@"_searchField"];
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     
@@ -144,7 +155,37 @@ typedef void(^CompletionBlock)(NSArray* results);
     return cell;
 }
 
+
 #pragma mark - UITableViewDelegate methods
+
+static const CGFloat filterBarHeight = 30;
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
+    // Filter View
+    CGRect filterFrame = CGRectMake(0, 0, self.tableView.bounds.size.width, filterBarHeight);
+    UIView *filterView = [[UIView alloc] initWithFrame:filterFrame];
+    filterView.backgroundColor = [UIColor colorWithRed:247.0/255 green:247.0/255 blue:247.0/255 alpha:1];
+    
+    CGRect labelFrame = CGRectMake(0, 0, self.tableView.bounds.size.width, filterBarHeight);
+    UILabel *label = [[UILabel alloc] initWithFrame: labelFrame];
+    label.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.layer.borderColor = [[UIColor colorWithRed:100.0/255 green:100.0/255 blue:100.0/255 alpha:1] CGColor];
+    label.layer.borderWidth = 2;
+    label.text = @"Place-holder for filter bar.";
+    [filterView addSubview:label];
+    
+    return filterView;
+    
+}
+
+-(CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    
+    // Height for Filter View
+    return filterBarHeight;
+    
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
