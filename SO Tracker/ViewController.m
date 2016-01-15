@@ -15,10 +15,13 @@
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) AFHTTPRequestOperationManager *afManager;
-@property (nonatomic, strong) NSMutableArray *pages;
+@property (nonatomic, copy) NSArray *pages;
 @property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, copy) NSString *currentQuery;
 
 @end
+
+typedef void(^CompletionBlock)(NSArray* results);
 
 @implementation ViewController
 
@@ -34,18 +37,27 @@
     [self.tableView registerNib:pageCellNib forCellReuseIdentifier:NSStringFromClass([PageCell class])];
     
     self.afManager = [AFHTTPRequestOperationManager manager];
-    [self fetchPages];
+    [self fetchPages:nil completionBlock:^(NSArray *pageObjects) {
+        self.pages = pageObjects;
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)configureSearchController {
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
     self.searchController.searchResultsUpdater = self;
-    self.searchController.searchBar.placeholder = @"Search here ...";
+    self.searchController.searchBar.placeholder = @"Search Stack Overflow browsing history ...";
     [self.searchController.searchBar sizeToFit];
     self.searchController.searchBar.delegate = self;
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-    //    self.navigationItem.titleView = self.searchController.searchBar;
+    self.navigationItem.titleView = self.searchController.searchBar;
+    self.searchController.hidesNavigationBarDuringPresentation = false;
+    self.searchController.searchBar.enablesReturnKeyAutomatically = NO;
+    
+    UITextField *textField = [self.searchController.searchBar valueForKey:@"_searchField"];
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    
+    self.currentQuery = @"";
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -61,20 +73,24 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)fetchPages {
+- (void)fetchPages:(NSString *)query completionBlock:(CompletionBlock)completionBlock{
     
-    [self.afManager GET:@"https://agile-plains-3571.herokuapp.com/sotracker/pages" parameters:@{@"login":@"psytronx"} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
-        if ([responseObject isKindOfClass:[NSArray class]]) {
-            
+    NSMutableDictionary *parameters = [@{@"login":@"psytronx"} mutableCopy];
+    if (query){
+        [parameters setObject:query forKey:@"q"];
+    }
+    
+    [self.afManager GET:@"https://agile-plains-3571.herokuapp.com/sotracker/pages" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseJson) {
+        NSLog(@"JSON: %@", responseJson);
+        if ([responseJson isKindOfClass:[NSArray class]]) {
             // Parse JSON into SOTPage objects
-            NSArray *pages = responseObject;
-            [pages enumerateObjectsUsingBlock:^(NSDictionary* pageDict, NSUInteger i, BOOL* stop) {
+            NSArray *pagesJson = responseJson;
+            NSMutableArray *pageObjects = [NSMutableArray arrayWithCapacity:pagesJson.count];
+            [pagesJson enumerateObjectsUsingBlock:^(NSDictionary* pageDict, NSUInteger i, BOOL* stop) {
                 SOTPage *page = [[SOTPage alloc] initWithDictionary:pageDict];
-                [self.pages addObject:page];
+                [pageObjects addObject:page];
             }];
-            
-            [self.tableView reloadData];
+            completionBlock(pageObjects);
         } else {
             NSLog(@"Error: responseObject should be an array. Houston, we have a problem.");
         }
@@ -144,6 +160,7 @@
 #pragma mark - UISearchResult
 
 - (void) updateSearchResultsForSearchController: (UISearchController *)searchController {
+    NSLog(@"In updateSearchResultsForSearchController:");
     //...
 }
 
@@ -151,11 +168,26 @@
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"searchBarCancelButtonClicked: ");
+    [self.searchController.searchBar resignFirstResponder];
+    self.searchController.active = false;
     
+    // Hacky way of preserving current search query string if Cancel is pressed. Todo - Find a better way!
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.searchController.searchBar.text = self.currentQuery;
+    });
 }
 
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"searchBarSearchButtonClicked: ");
+    NSString *query = searchBar.text;
+    [self fetchPages:query completionBlock:^(NSArray *pageObjects) {
+        self.pages = pageObjects;
+        [self.searchController.searchBar resignFirstResponder];
+        self.searchController.active = false;
+        self.searchController.searchBar.text = query;
+        self.currentQuery = query;
+        [self.tableView reloadData];
+    }];
     
 }
 
