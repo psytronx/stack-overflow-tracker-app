@@ -9,11 +9,13 @@
 #import "ViewController.h"
 #import "PageCell.h"
 #import "SOTPage.h"
+#import "CustomActivityIndicatorView.h"
 #import <AFNetworking.h>
 #import <SafariServices/SafariServices.h>
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) CustomActivityIndicatorView *customActivityIndicator;
 @property (nonatomic, strong) AFHTTPRequestOperationManager *afManager;
 @property (nonatomic, copy) NSArray *pages;
 @property (nonatomic, strong) UISearchController *searchController;
@@ -36,10 +38,46 @@ typedef void(^CompletionBlock)(NSArray* results);
     UINib *pageCellNib = [UINib nibWithNibName:@"PageCell" bundle:nil];
     [self.tableView registerNib:pageCellNib forCellReuseIdentifier:NSStringFromClass([PageCell class])];
     
+    // Setup Activity Indicator
+    // todo - Refactor this into a method
+    // todo - Add subview to topmost view of key window, so that it's not grayed out by search controller.
+    self.customActivityIndicator = [[CustomActivityIndicatorView alloc] init];
+    self.customActivityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.customActivityIndicator];
+    NSLayoutConstraint *centerXConstraint = [NSLayoutConstraint constraintWithItem:self.customActivityIndicator
+                                                               attribute:NSLayoutAttributeCenterX
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeCenterX
+                                                              multiplier:1.f
+                                                                constant:0.f];
+    NSLayoutConstraint *centerYConstraint = [NSLayoutConstraint constraintWithItem:self.customActivityIndicator
+                                                               attribute:NSLayoutAttributeCenterY
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeCenterY
+                                                              multiplier:1.f
+                                                                constant:0.f];
+    NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.customActivityIndicator
+                                                              attribute:NSLayoutAttributeHeight
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:nil
+                                                              attribute:NSLayoutAttributeNotAnAttribute
+                                                             multiplier:0.f constant:73];
+    NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:self.customActivityIndicator
+                                                              attribute:NSLayoutAttributeWidth
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:nil
+                                                              attribute:NSLayoutAttributeNotAnAttribute
+                                                             multiplier:0.f constant:73];
+    [self.view addConstraints:@[centerXConstraint, centerYConstraint, heightConstraint, widthConstraint]];
+    
+    self.customActivityIndicator.hidden = NO;
     self.afManager = [AFHTTPRequestOperationManager manager];
     [self fetchPages:nil completionBlock:^(NSArray *pageObjects) {
         self.pages = pageObjects;
         [self.tableView reloadData];
+        self.customActivityIndicator.hidden = YES;
     }];
 }
 
@@ -54,7 +92,7 @@ typedef void(^CompletionBlock)(NSArray* results);
     
     // Configure search controller and place search bar in nav bar
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.dimsBackgroundDuringPresentation = YES;
     self.searchController.searchResultsUpdater = self;
     self.searchController.searchBar.placeholder = @"Search Stack Overflow browsing history ...";
     self.searchController.searchBar.delegate = self;
@@ -84,6 +122,7 @@ typedef void(^CompletionBlock)(NSArray* results);
     // Dispose of any resources that can be recreated.
 }
 
+// Todo - is a separate data source class needed?
 - (void)fetchPages:(NSString *)query completionBlock:(CompletionBlock)completionBlock{
     
     NSMutableDictionary *parameters = [@{@"login":@"psytronx"} mutableCopy];
@@ -221,6 +260,7 @@ static const CGFloat filterBarHeight = 30;
 - (void) searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"searchBarSearchButtonClicked: ");
     NSString *query = searchBar.text;
+    self.customActivityIndicator.hidden = NO;
     [self fetchPages:query completionBlock:^(NSArray *pageObjects) {
         self.pages = pageObjects;
         [self.searchController.searchBar resignFirstResponder];
@@ -228,6 +268,7 @@ static const CGFloat filterBarHeight = 30;
         self.searchController.searchBar.text = query;
         self.currentQuery = query;
         [self.tableView reloadData];
+        self.customActivityIndicator.hidden = YES;
     }];
     
 }
